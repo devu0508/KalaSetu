@@ -54,7 +54,7 @@ export function ARModal({ isOpen, onClose, glbAsset, productName }: ARModalProps
                         <div className="bg-white w-full max-w-4xl h-[80vh] rounded-xl shadow-2xl relative overflow-hidden flex flex-col pointer-events-auto">
 
                             {/* Header */}
-                            <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-10 bg-gradient-to-b from-black/50 to-transparent text-white">
+                            <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-10 bg-linear-to-b from-black/50 to-transparent text-white">
                                 <h3 className="font-serif text-xl font-medium drop-shadow-md">{productName}</h3>
                                 <button
                                     onClick={onClose}
