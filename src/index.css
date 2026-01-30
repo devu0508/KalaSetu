@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  --color-earth-50: #fdf8f6;
+  --color-earth-100: #f2e8e5;
+  --color-earth-200: #eaddd7;
+  --color-earth-300: #e0cec7;
+  --color-earth-400: #d2bab0;
+  --color-earth-500: #a18072;
+  --color-earth-600: #8c6b5d;
+  --color-earth-700: #7a5a4d;
+  --color-earth-800: #5e4339;
+  --color-earth-900: #402d26;
+  --color-earth-950: #2a1d18;
+
+  --color-gold-500: #d4af37;
+  --color-gold-600: #b8962e;
+
+  --font-serif: "Cinzel", serif;
+  --font-sans: "Lato", sans-serif;
+}
+
+@layer base {
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
+  body {
+    @apply bg-earth-50 text-earth-900 font-sans antialiased selection:bg-gold-500 selection:text-white;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+}
