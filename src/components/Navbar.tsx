@@ -1,30 +1,27 @@
 import { useState } from 'react';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '../lib/utils';
 import { Menu, ShoppingBag, X } from 'lucide-react';
 
 export function Navbar() {
-    const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { scrollY } = useScroll();
+    const [animationDone, setAnimationDone] = useState(false);
 
-    useMotionValueEvent(scrollY, "change", (latest) => {
-        setIsScrolled(latest > 50);
-    });
-
-    // Default text color is light (for dark hero/process section), becomes dark on scroll (white background)
-    const textColorClass = isScrolled ? "text-earth-900" : "text-earth-100";
+    const textColorClass = "text-earth-100";
     const hoverColorClass = "hover:text-gold-500";
 
     return (
         <motion.nav
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-transparent",
-                isScrolled ? "bg-earth-50/90 backdrop-blur-md py-4 border-earth-200" : "bg-transparent py-6"
+                "fixed top-0 left-0 right-0 z-50 py-6 transition-all duration-700 ease-out",
+                animationDone
+                    ? "bg-white/10 backdrop-blur-md border-b border-white/10 shadow-lg"
+                    : "bg-transparent"
             )}
-            initial={{ y: -100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            onAnimationComplete={() => setAnimationDone(true)}
         >
             <div className="container-custom flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -85,3 +82,4 @@ export function Navbar() {
         </motion.nav>
     );
 }
+

@@ -5,27 +5,26 @@ import { Process } from './sections/Process';
 import { Collection } from './sections/Collection';
 import { Story } from './sections/Story';
 import { Footer } from './components/Footer';
-import ExperimentAr from './sections/ExperimentAr';
+
 
 function App() {
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      // direction: 'vertical',
-      // gestureDirection: 'vertical', 
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),   
       smoothWheel: true,
     });
-
+    let frameId: number;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      frameId = requestAnimationFrame(raf);
     }
 
-    requestAnimationFrame(raf);
+    frameId = requestAnimationFrame(raf);
 
     return () => {
       lenis.destroy();
+      cancelAnimationFrame(frameId);
     }
   }, []);
 
@@ -36,7 +35,6 @@ function App() {
         <Process />
         <Story />
         <Collection />
-        <ExperimentAr />
       </main>
       <Footer />
     </div>
