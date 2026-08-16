@@ -31,8 +31,8 @@ export function Story() {
                 >
                     <div className="aspect-square bg-earth-800 rounded-sm overflow-hidden relative">
                         <img
-                            src="https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&q=80&w=1200"
-                            alt="Artisan working"
+                            src="https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=1200"
+                            alt="Indian potter shaping clay on a wheel"
                             className="w-full h-full object-cover opacity-80"
                         />
                     </div>

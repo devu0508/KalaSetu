@@ -1,14 +1,17 @@
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ProductCard } from '../components/ProductCard';
+import type { Product } from '../types';
 
-const products = [
-    { id: 1, name: "Terracotta Vase", price: "₹2,400", category: "Pottery", image: "https://images.unsplash.com/photo-1578749556935-ef3893eb8d85?auto=format&fit=crop&q=80&w=800", glbAsset: "/glb_assets/vase.glb" },
-    { id: 2, name: "Woven Bamboo Basket", price: "₹1,800", category: "Weaving", image: "https://images.unsplash.com/photo-1595163623728-98e354923f54?auto=format&fit=crop&q=80&w=800" },
-    { id: 3, name: "Brass Oil Lamp", price: "₹3,200", category: "Metalwork", image: "https://images.unsplash.com/photo-1615461971485-9e3d93b45502?auto=format&fit=crop&q=80&w=800", glbAsset: "/glb_assets/owl_metal_sculpture.glb" },
-    { id: 4, name: "Hand-Block Print Saree", price: "₹8,500", category: "Textile", image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&q=80&w=800" },
-    { id: 5, name: "Sandalwood Carving", price: "₹12,000", category: "Woodwork", image: "https://images.unsplash.com/photo-1610729790676-e8d9d44cf617?auto=format&fit=crop&q=80&w=800", glbAsset: "/glb_assets/christus_rex_christ_the_king.glb" },
-    { id: 6, name: "Kashmiri Shawl", price: "₹15,000", category: "Textile", image: "https://images.unsplash.com/photo-1576487248866-993d50849925?auto=format&fit=crop&q=80&w=800" },
+// Featured products for the landing page (static showcase)
+const products: Product[] = [
+    { id: '1', name: "Terracotta Vase", description: "A beautiful hand-thrown terracotta vase", price: 2400, formattedPrice: "₹2,400", category: "Pottery", images: ["https://exclusivelane.com/cdn/shop/files/download_0af9ca7f-e3d7-4b20-9741-06b694475426_1024x.jpg?v=1750356209"], image: "https://exclusivelane.com/cdn/shop/files/download_0af9ca7f-e3d7-4b20-9741-06b694475426_1024x.jpg?v=1750356209", glbAsset: "/glb_assets/vase.glb", stock: 10, ratings: { average: 4.8, count: 42 }, createdAt: '' },
+    { id: '2', name: "Woven Bamboo Basket", description: "Handwoven bamboo basket by tribal artisans", price: 1800, formattedPrice: "₹1,800", category: "Weaving", images: ["https://u-mercari-images.mercdn.net/photos/m20609866046_2.jpg?1768658149"], image: "https://u-mercari-images.mercdn.net/photos/m20609866046_2.jpg?1768658149", glbAsset: '', stock: 5, ratings: { average: 4.6, count: 28 }, createdAt: '' },
+    { id: '3', name: "Brass Oil Lamp", description: "Intricately carved brass oil lamp", price: 3200, formattedPrice: "₹3,200", category: "Metalwork", images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo2RJSJfHz182oyRQYTzS2H72qQVm1nAa2KF4KoeyhYCTg8xLt4c3ICJ6I&s=10"], image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo2RJSJfHz182oyRQYTzS2H72qQVm1nAa2KF4KoeyhYCTg8xLt4c3ICJ6I&s=10", glbAsset: "/glb_assets/owl_metal_sculpture.glb", stock: 8, ratings: { average: 4.9, count: 61 }, createdAt: '' },
+    { id: '4', name: "Hand-Block Print Saree", description: "Authentic hand-block printed saree from Rajasthan", price: 8500, formattedPrice: "₹8,500", category: "Textile", images: ["https://shobitam.in/cdn/shop/files/RDR523_8.jpg?v=1757264516&width=1800"], image: "https://shobitam.in/cdn/shop/files/RDR523_8.jpg?v=1757264516&width=1800", glbAsset: '', stock: 3, ratings: { average: 4.7, count: 19 }, createdAt: '' },
+    { id: '5', name: "Sandalwood Carving", description: "Exquisite sandalwood sculpture by master carvers", price: 12000, formattedPrice: "₹12,000", category: "Woodwork", images: ["https://www.ragaarts.com/cdn/shop/articles/sandal-elephant-blog.jpg?crop=center&height=900&v=1724132793&width=2400"], image: "https://www.ragaarts.com/cdn/shop/articles/sandal-elephant-blog.jpg?crop=center&height=900&v=1724132793&width=2400", glbAsset: "/glb_assets/christus_rex_christ_the_king.glb", stock: 2, ratings: { average: 5.0, count: 14 }, createdAt: '' },
+    { id: '6', name: "Kashmiri Shawl", description: "Pure Pashmina Kashmiri shawl, hand embroidered", price: 15000, formattedPrice: "₹15,000", category: "Textile", images: ["https://www.shoppinginkashmir.com/cdn/shop/files/7_2_979fc186-4be3-4d0c-8b3a-bd9a6e58419a.png?v=1746084900&width=823"], image: "https://www.shoppinginkashmir.com/cdn/shop/files/7_2_979fc186-4be3-4d0c-8b3a-bd9a6e58419a.png?v=1746084900&width=823", glbAsset: '', stock: 6, ratings: { average: 4.8, count: 33 }, createdAt: '' },
 ];
 
 export function Collection() {
@@ -48,8 +51,23 @@ export function Collection() {
 
                 <motion.div style={{ y }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
                     {products.map((product) => (
-                        <ProductCard key={product.id} {...product} />
+                        <ProductCard key={product.id} product={product} />
                     ))}
+                </motion.div>
+
+                <motion.div
+                    className="text-center mt-14"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 }}
+                >
+                    <Link
+                        to="/products"
+                        className="inline-flex items-center gap-2 px-8 py-3.5 border-2 border-earth-900 text-earth-900 font-semibold text-sm uppercase tracking-widest hover:bg-earth-900 hover:text-earth-50 transition-all duration-300 rounded-sm"
+                    >
+                        View Full Collection
+                    </Link>
                 </motion.div>
             </div>
 
