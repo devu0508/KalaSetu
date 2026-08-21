@@ -6,6 +6,7 @@ import {
   setTokenCookies,
   clearTokenCookies,
   verifyRefreshToken,
+  verifyAccessToken,
   generateAccessToken,
   accessCookieOptions,
 } from "./token.service.js";
