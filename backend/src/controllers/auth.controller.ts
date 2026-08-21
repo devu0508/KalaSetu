@@ -65,12 +65,27 @@ export const signin = asyncHandler(async (req: Request, res: Response) => {
  * GET /api/auth/google
  */
 export const googleAuth = (req: Request, res: Response, next: Function) => {
-  const role = req.query.role as string || "customer";
+  const role = (req.query.role as string) || "customer";
+  let returnTo = env.frontendOrigin.replace(/\/$/, "");
+
+  if (req.headers.referer) {
+    try {
+      returnTo = new URL(req.headers.referer).origin;
+    } catch {}
+  }
 
   res.cookie("oauth_role", role, {
     httpOnly: true,
     secure: env.nodeEnv === "production",
-    sameSite: "lax",
+    sameSite: env.nodeEnv === "production" ? "none" : "lax",
+    maxAge: 5 * 60 * 1000,
+    path: "/",
+  });
+
+  res.cookie("oauth_origin", returnTo, {
+    httpOnly: true,
+    secure: env.nodeEnv === "production",
+    sameSite: env.nodeEnv === "production" ? "none" : "lax",
     maxAge: 5 * 60 * 1000,
     path: "/",
   });
@@ -87,9 +102,10 @@ export const googleAuth = (req: Request, res: Response, next: Function) => {
 export const googleCallback = [
   (req: Request, res: Response, next: Function) => {
     passport.authenticate("google", { session: false }, (err: any, user: any, info: any) => {
+      const origin = (req.cookies?.oauth_origin as string) || env.frontendOrigin.replace(/\/$/, "");
       if (err || !user) {
         console.error("❌ Google OAuth authentication failed:", err || info);
-        return res.redirect(`${env.frontendOrigin}/auth?error=google_failed`);
+        return res.redirect(`${origin}/auth?error=google_failed`);
       }
       req.user = user;
       next();
@@ -99,7 +115,9 @@ export const googleCallback = [
     const user = req.user as IUser;
 
     const role = (req.cookies?.oauth_role as string) || "customer";
+    const origin = (req.cookies?.oauth_origin as string) || env.frontendOrigin.replace(/\/$/, "");
     res.clearCookie("oauth_role", { path: "/" });
+    res.clearCookie("oauth_origin", { path: "/" });
 
     if (user.role === "customer" && (role === "artisan" || role === "customer")) {
       user.role = role as "customer" | "artisan";
@@ -112,7 +130,7 @@ export const googleCallback = [
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
 
-    res.redirect(`${env.frontendOrigin}/auth/success?token=${accessToken}`);
+    res.redirect(`${origin}/auth/success?token=${accessToken}`);
   }),
 ];
 

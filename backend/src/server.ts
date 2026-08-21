@@ -44,7 +44,8 @@ app.use(
       if (
         !origin ||
         origin === env.frontendOrigin ||
-        (env.nodeEnv === "development" && /^http:\/\/(localhost|192\.168\.)/.test(origin))
+        (env.nodeEnv === "development" && /^http:\/\/(localhost|192\.168\.)/.test(origin)) ||
+        /\.vercel\.app$/.test(new URL(origin).hostname)
       ) {
         callback(null, true);
       } else {
