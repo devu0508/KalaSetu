@@ -164,6 +164,11 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
+        try {
+          if (action.payload && (action.payload as any).token) {
+            localStorage.setItem('kalasetu_token', (action.payload as any).token);
+          }
+        } catch {}
       })
       .addCase(exchangeOAuthToken.rejected, (state, action) => {
         state.isLoading = false;
@@ -176,6 +181,9 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
+        try {
+          localStorage.removeItem('kalasetu_token');
+        } catch {}
       });
   },
 });

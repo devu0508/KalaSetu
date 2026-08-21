@@ -8,10 +8,14 @@ import type { AuthenticatedRequest } from "../types/index.js";
  * Attaches decoded user payload { id, role } to req.user.
  */
 const authMiddleware = (req: AuthenticatedRequest, _res: Response, next: NextFunction): void => {
-  const token = req.cookies?.accessToken as string | undefined;
+  const token =
+    req.cookies?.accessToken ||
+    (req.headers.authorization?.startsWith("Bearer ")
+      ? req.headers.authorization.split(" ")[1]
+      : undefined);
 
   if (!token) {
-    throw new ApiError(401, "Authentication required. Please sign in.");
+    return next(new ApiError(401, "Authentication required. Please sign in."));
   }
 
   try {
@@ -20,9 +24,9 @@ const authMiddleware = (req: AuthenticatedRequest, _res: Response, next: NextFun
     next();
   } catch (error: unknown) {
     if (error instanceof Error && error.name === "TokenExpiredError") {
-      throw new ApiError(401, "Access token expired. Please refresh.");
+      return next(new ApiError(401, "Access token expired. Please refresh."));
     }
-    throw new ApiError(401, "Invalid access token");
+    return next(new ApiError(401, "Invalid access token"));
   }
 };
 

@@ -62,8 +62,8 @@ const errorMiddleware = (err: MongooseError, _req: Request, res: Response, _next
     errors = [];
   }
 
-  // Log in development
-  if (env.nodeEnv === "development") {
+  // Always log unexpected errors
+  if (statusCode >= 500 || env.nodeEnv === "development") {
     console.error("❌ Error:", {
       statusCode,
       message,

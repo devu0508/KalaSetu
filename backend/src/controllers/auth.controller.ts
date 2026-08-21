@@ -143,11 +143,11 @@ export const exchangeToken = asyncHandler(async (req: Request, res: Response) =>
     throw new ApiError(400, "Token is required");
   }
 
-  const user = await authService.exchangeToken({ token, res });
+  const result = await authService.exchangeToken({ token, res });
 
   res
     .status(200)
-    .json(new ApiResponse(200, user.toJSON(), "Authentication confirmed"));
+    .json(new ApiResponse(200, { ...result.user.toJSON(), token: result.token }, "Authentication confirmed"));
 });
 
 /**

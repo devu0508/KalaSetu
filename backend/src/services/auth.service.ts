@@ -91,7 +91,7 @@ export const exchangeToken = async ({
 }: {
   token: string;
   res: Response;
-}): Promise<IUser> => {
+}): Promise<{ user: IUser; token: string }> => {
   let decoded;
   try {
     decoded = verifyRefreshToken(token);
@@ -109,11 +109,11 @@ export const exchangeToken = async ({
     throw new ApiError(404, "User not found");
   }
 
-  const { refreshToken } = setTokenCookies(res, user);
+  const { accessToken, refreshToken } = setTokenCookies(res, user);
   user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
 
-  return user;
+  return { user, token: accessToken };
 };
 
 /**

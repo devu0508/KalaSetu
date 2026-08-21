@@ -16,6 +16,17 @@ const api = axios.create({
   },
 });
 
+// ── Request interceptor: attach Bearer token if stored ──────────
+api.interceptors.request.use((config) => {
+  try {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('kalasetu_token') : null;
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {}
+  return config;
+});
+
 // ── Response interceptor: auto-refresh on 401 ────────────────────
 let isRefreshing = false;
 let failedQueue: Array<{
