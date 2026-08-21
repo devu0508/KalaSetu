@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../store/hooks';
-import { checkAuth } from '../store/slices/authSlice';
+import { checkAuth, exchangeOAuthToken } from '../store/slices/authSlice';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
-
-import api from '../api/axios';
 
 export default function AuthSuccessPage() {
   const dispatch = useAppDispatch();
@@ -16,15 +14,22 @@ export default function AuthSuccessPage() {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('token');
 
+        let userRole: string | undefined;
+
         if (token) {
-          // Exchange token to set cookies directly through the Vercel proxy
-          await api.post('/auth/exchange-token', { token });
+          const result = await dispatch(exchangeOAuthToken(token));
+          if (exchangeOAuthToken.fulfilled.match(result)) {
+            userRole = result.payload.role;
+          }
+        } else {
+          const result = await dispatch(checkAuth());
+          if (checkAuth.fulfilled.match(result)) {
+            userRole = result.payload.role;
+          }
         }
 
-        const result = await dispatch(checkAuth());
-        if (checkAuth.fulfilled.match(result)) {
-          const role = result.payload?.role;
-          if (role === 'artisan') {
+        if (userRole) {
+          if (userRole === 'artisan') {
             navigate('/artisan/dashboard', { replace: true });
           } else {
             navigate('/products', { replace: true });

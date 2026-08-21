@@ -68,6 +68,20 @@ export const checkAuth = createAsyncThunk(
   }
 );
 
+export const exchangeOAuthToken = createAsyncThunk(
+  'auth/exchangeOAuthToken',
+  async (token: string, { rejectWithValue }) => {
+    try {
+      const res = await api.post<ApiResponse<User>>('/auth/exchange-token', { token });
+      return res.data.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || 'OAuth authentication failed'
+      );
+    }
+  }
+);
+
 export const logout = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
@@ -138,6 +152,22 @@ const authSlice = createSlice({
         state.isCheckingAuth = false;
         state.user = null;
         state.isAuthenticated = false;
+      });
+
+    // Exchange OAuth Token
+    builder
+      .addCase(exchangeOAuthToken.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(exchangeOAuthToken.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
+      })
+      .addCase(exchangeOAuthToken.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
       });
 
     // Logout
