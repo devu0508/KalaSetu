@@ -36,23 +36,23 @@ const app = express();
 app.set("trust proxy", 1);
 
 // ── Global Middleware ─────────────────────────────────────────────
-app.use(helmet());
 app.use(
   cors({
     origin: (origin, callback) => {
-      // In development, allow requests from any local origin (LAN access)
-      if (
-        !origin ||
-        origin === env.frontendOrigin ||
-        (env.nodeEnv === "development" && /^http:\/\/(localhost|192\.168\.)/.test(origin)) ||
-        /\.vercel\.app$/.test(new URL(origin).hostname)
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
+      // Allow all origins with credentials
+      callback(null, true);
     },
-    credentials: true, // allow cookies
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+    exposedHeaders: ["Set-Cookie"],
+  })
+);
+
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
   })
 );
 app.use(cookieParser());
