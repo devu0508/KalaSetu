@@ -59,6 +59,7 @@ export function ARModal({ isOpen, onClose, glbAsset, productName }: ARModalProps
                                 <button
                                     onClick={onClose}
                                     className="p-2 bg-white/20 hover:bg-white/30 rounded-full backdrop-blur-md transition-colors"
+                                    aria-label="Close"
                                 >
                                     <X className="w-6 h-6" />
                                 </button>
@@ -75,7 +76,7 @@ export function ARModal({ isOpen, onClose, glbAsset, productName }: ARModalProps
                                     camera-controls
                                     auto-rotate
                                     ar
-                                    ar-modes="webxr scene-viewer quick-look"
+                                    ar-modes="scene-viewer quick-look webxr"
                                     style={{ width: '100%', height: '100%' }}
                                 >
                                     <button slot="ar-button" className="absolute bottom-6 right-6 px-6 py-3 bg-earth-900 text-white rounded-full font-medium shadow-lg flex items-center gap-2 hover:bg-earth-800 transition-colors z-20">
