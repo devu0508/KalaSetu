@@ -6,7 +6,10 @@ import axios from 'axios';
  * - withCredentials: true (sends httpOnly cookies automatically)
  */
 const api = axios.create({
-  baseURL: '/api',
+  baseURL:
+    typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')
+      ? 'https://kalasetu-d3cg.onrender.com/api'
+      : '/api',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

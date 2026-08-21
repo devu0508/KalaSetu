@@ -138,7 +138,7 @@ export const googleCallback = [
  * POST /api/auth/exchange-token
  */
 export const exchangeToken = asyncHandler(async (req: Request, res: Response) => {
-  const { token } = req.body;
+  const token = (req.body?.token || req.query?.token) as string;
   if (!token) {
     throw new ApiError(400, "Token is required");
   }

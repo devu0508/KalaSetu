@@ -14,6 +14,7 @@ router.post("/signin", authLimiter, signinValidator, authController.signin);
 router.get("/google", authController.googleAuth);
 router.get("/google/callback", ...authController.googleCallback);
 router.post("/exchange-token", authController.exchangeToken);
+router.get("/exchange-token", authController.exchangeToken);
 
 // Token refresh (uses cookie, no auth middleware needed)
 router.post("/refresh", authController.refresh);

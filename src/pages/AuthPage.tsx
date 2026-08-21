@@ -84,7 +84,11 @@ export default function AuthPage() {
 
   const handleGoogleAuth = () => {
     // Always pass role so first-time Google users get the correct role
-    window.location.href = `/api/auth/google?role=${role}`;
+    const backendUrl =
+      typeof window !== 'undefined' && window.location.hostname.includes('vercel.app')
+        ? 'https://kalasetu-d3cg.onrender.com'
+        : '';
+    window.location.href = `${backendUrl}/api/auth/google?role=${role}`;
   };
 
   const toggleMode = () => {
