@@ -54,7 +54,7 @@ const parseExpiryToMs = (expiryStr: string): number => {
 export const accessCookieOptions = (): CookieOptions => ({
   httpOnly: true,
   secure: env.nodeEnv === "production",
-  sameSite: "lax",
+  sameSite: env.nodeEnv === "production" ? "none" : "lax",
   maxAge: parseExpiryToMs(env.jwtAccessExpiresIn),
   path: "/",
 });
@@ -65,7 +65,7 @@ export const accessCookieOptions = (): CookieOptions => ({
 export const refreshCookieOptions = (): CookieOptions => ({
   httpOnly: true,
   secure: env.nodeEnv === "production",
-  sameSite: "lax",
+  sameSite: env.nodeEnv === "production" ? "none" : "lax",
   maxAge: parseExpiryToMs(env.jwtRefreshExpiresIn),
   path: "/",
 });

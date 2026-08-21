@@ -4,21 +4,35 @@ import { useAppDispatch } from '../store/hooks';
 import { checkAuth } from '../store/slices/authSlice';
 import { LoadingSpinner } from '../components/ui/LoadingSpinner';
 
+import api from '../api/axios';
+
 export default function AuthSuccessPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     const verifyAuth = async () => {
-      const result = await dispatch(checkAuth());
-      if (checkAuth.fulfilled.match(result)) {
-        const role = result.payload?.role;
-        if (role === 'artisan') {
-          navigate('/artisan/dashboard', { replace: true });
-        } else {
-          navigate('/products', { replace: true });
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+
+        if (token) {
+          // Exchange token to set cookies directly through the Vercel proxy
+          await api.post('/auth/exchange-token', { token });
         }
-      } else {
+
+        const result = await dispatch(checkAuth());
+        if (checkAuth.fulfilled.match(result)) {
+          const role = result.payload?.role;
+          if (role === 'artisan') {
+            navigate('/artisan/dashboard', { replace: true });
+          } else {
+            navigate('/products', { replace: true });
+          }
+        } else {
+          navigate('/auth?error=google_failed', { replace: true });
+        }
+      } catch {
         navigate('/auth?error=google_failed', { replace: true });
       }
     };

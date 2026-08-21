@@ -108,10 +108,29 @@ export const googleCallback = [
     // Google accounts are automatically verified
     user.isEmailVerified = true;
 
-    await authService.handleGoogleAuth({ user, res });
-    res.redirect(`${env.frontendOrigin}/auth/success`);
+    const { accessToken, refreshToken } = authService.setTokenCookies(res, user);
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    res.redirect(`${env.frontendOrigin}/auth/success?token=${accessToken}`);
   }),
 ];
+
+/**
+ * POST /api/auth/exchange-token
+ */
+export const exchangeToken = asyncHandler(async (req: Request, res: Response) => {
+  const { token } = req.body;
+  if (!token) {
+    throw new ApiError(400, "Token is required");
+  }
+
+  const user = await authService.exchangeToken({ token, res });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, user.toJSON(), "Authentication confirmed"));
+});
 
 /**
  * POST /api/auth/refresh

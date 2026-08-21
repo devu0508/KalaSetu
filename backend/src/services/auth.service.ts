@@ -80,6 +80,42 @@ export const signin = async ({
   return user;
 };
 
+export { setTokenCookies };
+
+/**
+ * Handle token exchange for cross-domain OAuth redirects.
+ */
+export const exchangeToken = async ({
+  token,
+  res,
+}: {
+  token: string;
+  res: Response;
+}): Promise<IUser> => {
+  let decoded;
+  try {
+    decoded = verifyRefreshToken(token);
+  } catch {
+    // If not a refresh token, check if valid access token
+    try {
+      decoded = verifyAccessToken(token);
+    } catch {
+      throw new ApiError(401, "Invalid or expired authentication token");
+    }
+  }
+
+  const user = await User.findById(decoded.id);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const { refreshToken } = setTokenCookies(res, user);
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  return user;
+};
+
 /**
  * Handle successful Google OAuth callback — set cookies.
  */
