@@ -21,10 +21,13 @@ passport.use(
       try {
         const email = profile.emails?.[0]?.value;
 
+        console.log(`🔑 Google OAuth callback received for email: ${email}, profile id: ${profile.id}`);
+
         // Check if a user with this googleId already exists
         let user = await User.findOne({ googleId: profile.id });
 
         if (user) {
+          console.log(`✅ Existing Google user found: ${user.email}`);
           return done(null, user);
         }
 
@@ -32,24 +35,29 @@ passport.use(
         if (email) {
           user = await User.findOne({ email });
           if (user) {
+            console.log(`🔗 Linking Google ID to existing email account: ${email}`);
             user.googleId = profile.id;
             user.avatar = user.avatar || profile.photos?.[0]?.value || "";
+            user.isEmailVerified = true;
             await user.save();
             return done(null, user);
           }
         }
 
         // Create a new user
+        console.log(`🆕 Creating new Google user: ${email}`);
         user = await User.create({
           name: profile.displayName || "Google User",
           email,
           googleId: profile.id,
           avatar: profile.photos?.[0]?.value || "",
           password: null, // Google-only account — no password
+          isEmailVerified: true,
         });
 
         return done(null, user);
       } catch (error) {
+        console.error("❌ Google OAuth strategy error:", error);
         return done(error as Error, undefined);
       }
     }
