@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://YOUR_RENDER_BACKEND_URL.onrender.com/api/$1"
+      "destination": "https://kalasetu-d3cg.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
