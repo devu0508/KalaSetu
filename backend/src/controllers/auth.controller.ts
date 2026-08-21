@@ -7,6 +7,13 @@ import * as authService from "../services/auth.service.js";
 import env from "../config/env.js";
 import passport from "../config/passport.js";
 import type { AuthenticatedRequest, IUser } from "../types/index.js";
+import User from "../models/User.js";
+import {
+  generateToken,
+  hashToken,
+  sendVerificationEmail,
+  sendPasswordResetEmail,
+} from "../services/email.service.js";
 
 /**
  * POST /api/auth/signup
@@ -18,11 +25,23 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const { name, email, password, role } = req.body;
-  const user = await authService.signup({ name, email, password, role });
+  const user = await authService.signup({ name, email, password, role, res });
+
+  // Send verification email
+  const token = generateToken();
+  user.emailVerificationToken = hashToken(token);
+  user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  await user.save({ validateBeforeSave: false });
+
+  try {
+    await sendVerificationEmail(email, token);
+  } catch (err) {
+    console.error("⚠️  Failed to send verification email:", (err as Error).message);
+  }
 
   res
     .status(201)
-    .json(new ApiResponse(201, user.toJSON(), "Account created successfully"));
+    .json(new ApiResponse(201, user.toJSON(), "Account created successfully. Please verify your email."));
 });
 
 /**
@@ -44,33 +63,26 @@ export const signin = asyncHandler(async (req: Request, res: Response) => {
 
 /**
  * GET /api/auth/google
- * Redirects to Google consent screen.
- * Accepts optional ?role=customer|artisan query param, stored in a short-lived
- * cookie so it survives the OAuth redirect round-trip without needing sessions.
  */
 export const googleAuth = (req: Request, res: Response, next: Function) => {
   const role = req.query.role as string || "customer";
 
-  // Store role in a short-lived cookie (5 min) — read back in the callback
   res.cookie("oauth_role", role, {
     httpOnly: true,
     secure: env.nodeEnv === "production",
     sameSite: "lax",
-    maxAge: 5 * 60 * 1000, // 5 minutes
+    maxAge: 5 * 60 * 1000,
     path: "/",
   });
 
   passport.authenticate("google", {
     scope: ["profile", "email"],
     session: false,
-    // NOTE: do NOT pass `state` here — passport-oauth2 requires express-session
-    // for state CSRF verification, which we don't use.
   })(req, res, next);
 };
 
 /**
  * GET /api/auth/google/callback
- * Handles Google OAuth callback, issues JWT cookies, redirects to frontend.
  */
 export const googleCallback = [
   (req: Request, res: Response, next: Function) => {
@@ -82,16 +94,15 @@ export const googleCallback = [
   asyncHandler(async (req: Request, res: Response) => {
     const user = req.user as IUser;
 
-    // Read role from the cookie we set before redirecting to Google
     const role = (req.cookies?.oauth_role as string) || "customer";
-
-    // Clear the temporary cookie
     res.clearCookie("oauth_role", { path: "/" });
 
-    // Set role for new users (only if still default)
     if (user.role === "customer" && (role === "artisan" || role === "customer")) {
       user.role = role as "customer" | "artisan";
     }
+
+    // Google accounts are automatically verified
+    user.isEmailVerified = true;
 
     await authService.handleGoogleAuth({ user, res });
     res.redirect(`${env.frontendOrigin}/auth/success`);
@@ -131,3 +142,128 @@ export const me = asyncHandler(async (req: Request, res: Response) => {
     .status(200)
     .json(new ApiResponse(200, user.toJSON(), "User fetched successfully"));
 });
+
+/**
+ * GET /api/auth/verify-email/:token
+ */
+export const verifyEmail = asyncHandler(async (req: Request, res: Response) => {
+  const hashedToken = hashToken(req.params.token as string);
+
+  const user = await User.findOne({
+    emailVerificationToken: hashedToken,
+    emailVerificationExpires: { $gt: new Date() },
+  }).select("+emailVerificationToken +emailVerificationExpires");
+
+  if (!user) {
+    throw new ApiError(400, "Invalid or expired verification link");
+  }
+
+  user.isEmailVerified = true;
+  user.emailVerificationToken = null;
+  user.emailVerificationExpires = null;
+  await user.save({ validateBeforeSave: false });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Email verified successfully"));
+});
+
+/**
+ * POST /api/auth/resend-verification
+ */
+export const resendVerification = asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new ApiError(400, "Email is required");
+  }
+
+  const user = await User.findOne({ email }).select("+emailVerificationToken +emailVerificationExpires");
+  if (!user) {
+    // Don't reveal whether user exists
+    res.status(200).json(new ApiResponse(200, null, "If an account exists, a verification email has been sent."));
+    return;
+  }
+
+  if (user.isEmailVerified) {
+    throw new ApiError(400, "Email is already verified");
+  }
+
+  const token = generateToken();
+  user.emailVerificationToken = hashToken(token);
+  user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  await user.save({ validateBeforeSave: false });
+
+  await sendVerificationEmail(email, token);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Verification email sent"));
+});
+
+/**
+ * POST /api/auth/forgot-password
+ */
+export const forgotPassword = asyncHandler(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new ApiError(400, "Email is required");
+  }
+
+  const user = await User.findOne({ email }).select("+passwordResetToken +passwordResetExpires");
+
+  // Always return success to prevent email enumeration
+  if (!user) {
+    res.status(200).json(new ApiResponse(200, null, "If an account exists, a reset email has been sent."));
+    return;
+  }
+
+  if (!user.password) {
+    throw new ApiError(400, "This account uses Google sign-in. Please use Google to log in.");
+  }
+
+  const token = generateToken();
+  user.passwordResetToken = hashToken(token);
+  user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  await user.save({ validateBeforeSave: false });
+
+  await sendPasswordResetEmail(email, token);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Password reset email sent"));
+});
+
+/**
+ * POST /api/auth/reset-password
+ */
+export const resetPassword = asyncHandler(async (req: Request, res: Response) => {
+  const { token, password } = req.body;
+  if (!token || !password) {
+    throw new ApiError(400, "Token and new password are required");
+  }
+
+  if (password.length < 6) {
+    throw new ApiError(400, "Password must be at least 6 characters");
+  }
+
+  const hashedToken = hashToken(token);
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: new Date() },
+  }).select("+passwordResetToken +passwordResetExpires +password");
+
+  if (!user) {
+    throw new ApiError(400, "Invalid or expired reset token");
+  }
+
+  user.password = password;
+  user.passwordResetToken = null;
+  user.passwordResetExpires = null;
+  await user.save();
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Password reset successfully. Please sign in with your new password."));
+});
+

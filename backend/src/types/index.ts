@@ -22,6 +22,11 @@ export interface IUser extends Document {
   googleId: string | null;
   role: "customer" | "artisan" | "admin";
   refreshToken: string | null;
+  isEmailVerified: boolean;
+  emailVerificationToken: string | null;
+  emailVerificationExpires: Date | null;
+  passwordResetToken: string | null;
+  passwordResetExpires: Date | null;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -125,4 +130,9 @@ export interface EnvConfig {
   googleCallbackUrl: string;
   frontendOrigin: string;
   geminiApiKey: string;
+  smtpHost: string;
+  smtpPort: number;
+  smtpUser: string;
+  smtpPass: string;
+  smtpFrom: string;
 }

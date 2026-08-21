@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Plus, Edit3, Trash2, X, Save, BarChart3, Boxes, IndianRupee } from 'lucide-react';
+import { Package, Plus, Edit3, Trash2, X, Save, Boxes, IndianRupee } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
   fetchMyProducts,

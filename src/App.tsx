@@ -5,6 +5,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { ArtisanRoute } from './components/ArtisanRoute';
+import { AdminRoute } from './components/AdminRoute';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -20,7 +21,10 @@ import ArtisansPage from './pages/ArtisansPage';
 import ArtisanDetailPage from './pages/ArtisanDetailPage';
 import BusinessHelperPage from './pages/BusinessHelperPage';
 import ArtisanDashboardPage from './pages/ArtisanDashboardPage';
-
+import AdminDashboardPage from './pages/AdminDashboardPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 function App() {
   useEffect(() => {
     const lenis = new Lenis({
@@ -62,6 +66,9 @@ function App() {
         <Route path="/products/:id" element={<ProductDetailPage />} />
         <Route path="/artisans" element={<ArtisansPage />} />
         <Route path="/artisans/:id" element={<ArtisanDetailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+        <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
 
         {/* Protected Routes */}
         <Route
@@ -104,6 +111,16 @@ function App() {
             <ArtisanRoute>
               <ArtisanDashboardPage />
             </ArtisanRoute>
+          }
+        />
+
+        {/* Admin-only Routes */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboardPage />
+            </AdminRoute>
           }
         />
 

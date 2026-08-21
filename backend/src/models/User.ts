@@ -38,7 +38,6 @@ const userSchema = new mongoose.Schema<IUser>(
     address: { type: addressSchema, default: () => ({}) },
     googleId: {
       type: String,
-      default: null,
       sparse: true,
       unique: true,
     },
@@ -49,6 +48,30 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     refreshToken: {
       type: String,
+      default: null,
+      select: false,
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    emailVerificationExpires: {
+      type: Date,
+      default: null,
+      select: false,
+    },
+    passwordResetToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    passwordResetExpires: {
+      type: Date,
       default: null,
       select: false,
     },

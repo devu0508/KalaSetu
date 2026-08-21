@@ -20,6 +20,7 @@ import wishlistRoutes from "./routes/wishlist.routes.js";
 import artisanRoutes from "./routes/artisan.routes.js";
 import chatRoutes from "./routes/chat.routes.js";
 import artisanProductRoutes from "./routes/artisan-product.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 import errorMiddleware from "./middlewares/error.middleware.js";
 import { generalLimiter } from "./middlewares/rateLimiter.middleware.js";
@@ -37,7 +38,18 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: env.frontendOrigin,
+    origin: (origin, callback) => {
+      // In development, allow requests from any local origin (LAN access)
+      if (
+        !origin ||
+        origin === env.frontendOrigin ||
+        (env.nodeEnv === "development" && /^http:\/\/(localhost|192\.168\.)/.test(origin))
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true, // allow cookies
   })
 );
@@ -66,6 +78,7 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/artisans", artisanRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/artisan/products", artisanProductRoutes);
+app.use("/api/admin", adminRoutes);
 
 // ── Health Check ──────────────────────────────────────────────────
 app.get("/api/health", (_req: Request, res: Response) => {
@@ -94,10 +107,10 @@ const startServer = async (): Promise<void> => {
   // Ensure artisan/product collections are populated
   await autoSeed();
 
-  app.listen(env.port, () => {
-    console.log(`\n🚀  KalaSetu API running on http://localhost:${env.port}`);
+  app.listen(env.port, "0.0.0.0", () => {
+    console.log(`\n🚀  KalaSetu API running on http://0.0.0.0:${env.port}`);
     console.log(`📦  Environment: ${env.nodeEnv}`);
-    console.log(`🌐  CORS origin: ${env.frontendOrigin}\n`);
+    console.log(`🌐  CORS origin: ${env.frontendOrigin} (+ LAN in dev)\n`);
   });
 };
 

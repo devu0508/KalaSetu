@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../lib/utils';
-import { Menu, ShoppingBag, X, Heart, User, LogOut, ChevronDown, Package, LayoutDashboard, Sparkles } from 'lucide-react';
+import { Menu, ShoppingBag, X, Heart, User, LogOut, ChevronDown, Package, LayoutDashboard, Sparkles, Shield } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { logout } from '../store/slices/authSlice';
 import { fetchCart } from '../store/slices/cartSlice';
@@ -249,6 +249,18 @@ export function Navbar() {
                           </Link>
                         </div>
                       )}
+                      {user?.role === 'admin' && (
+                        <div className="border-t border-earth-100 py-1">
+                          <Link
+                            to="/admin"
+                            onClick={() => setIsUserMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-purple-700 hover:bg-purple-50 transition-colors font-medium"
+                          >
+                            <Shield size={15} />
+                            Admin Panel
+                          </Link>
+                        </div>
+                      )}
                       <div className="border-t border-earth-100 py-1">
                         <button
                           onClick={handleLogout}
@@ -345,6 +357,16 @@ export function Navbar() {
                         Business Helper
                       </Link>
                     </>
+                  )}
+                  {user?.role === 'admin' && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors text-sm font-medium mt-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Shield size={16} />
+                      Admin Panel
+                    </Link>
                   )}
                   <button
                     onClick={handleLogout}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight, ShoppingBag, Palette } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -266,6 +266,17 @@ export default function AuthPage() {
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
+
+            {mode === 'signin' && (
+              <div className="flex justify-end mt-1">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs text-earth-400 hover:text-gold-400 transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+            )}
 
             <Button
               type="submit"

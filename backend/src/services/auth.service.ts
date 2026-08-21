@@ -18,11 +18,13 @@ export const signup = async ({
   email,
   password,
   role = "customer",
+  res,
 }: {
   name: string;
   email: string;
   password: string;
   role?: "customer" | "artisan";
+  res: Response;
 }): Promise<IUser> => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -30,6 +32,12 @@ export const signup = async ({
   }
 
   const user = await User.create({ name, email, password, role });
+
+  // Set auth cookies so the user is logged in immediately after signup
+  const { refreshToken } = setTokenCookies(res, user);
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
   return user;
 };
 

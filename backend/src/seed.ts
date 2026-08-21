@@ -18,9 +18,9 @@ const artisanData = [
     craft: "Pottery",
     location: { city: "Khurja", state: "Uttar Pradesh" },
     profileImage:
-      "https://villagesquare.in/jharkhand-woman-turns-entrepreneur-making-bamboo-handicrafts/",
+      `/uploads/artisans/meera%20devi.jpg`,
     coverImage:
-      "https://villagesquare.in/jharkhand-woman-turns-entrepreneur-making-bamboo-handicrafts/",
+      `/uploads/artisans/meera%20devi.jpg`,
     since: 1992,
     featured: true,
   },
@@ -32,9 +32,9 @@ const artisanData = [
     craft: "Weaving",
     location: { city: "Sualkuchi", state: "Assam" },
     profileImage:
-      "https://yourstory.com/smbstory/india-brands-reviving-handicrafts-artisans-smbs",
+      `/uploads/artisans/rajan%20mistry.jpg`,
     coverImage:
-      "https://yourstory.com/smbstory/india-brands-reviving-handicrafts-artisans-smbs",
+      `/uploads/artisans/rajan%20mistry.jpg`,
     since: 1985,
     featured: true,
   },
@@ -46,9 +46,9 @@ const artisanData = [
     craft: "Metalwork",
     location: { city: "Bastar", state: "Chhattisgarh" },
     profileImage:
-      "https://www.thegoodloop.com/empowering-artisans-the-keepers-of-our-heritage/",
+      `/uploads/artisans/suresh%20vishwakarma.webp`,
     coverImage:
-      "https://www.thegoodloop.com/empowering-artisans-the-keepers-of-our-heritage/",
+      `/uploads/artisans/suresh%20vishwakarma.webp`,
     since: 1978,
     featured: true,
   },
@@ -60,9 +60,9 @@ const artisanData = [
     craft: "Textile",
     location: { city: "Sanganer", state: "Rajasthan" },
     profileImage:
-      "https://aksahomedecor.com/blogs/news/the-rise-of-indian-handicrafts-in-australia-a-look-at-the-growing-trend-and-where-to-find-them?srsltid=AfmBOoqxDpXYReQOwwLlTrYO0cxXIkOTHsazkHyHwbPqZXevhErJ9ja-",
+      `/uploads/artisans/fatima%20begum.jpg`,
     coverImage:
-      "https://aksahomedecor.com/blogs/news/the-rise-of-indian-handicrafts-in-australia-a-look-at-the-growing-trend-and-where-to-find-them?srsltid=AfmBOoqxDpXYReQOwwLlTrYO0cxXIkOTHsazkHyHwbPqZXevhErJ9ja-",
+      `/uploads/artisans/fatima%20begum.jpg`,
     since: 1995,
     featured: false,
   },
@@ -74,23 +74,23 @@ const artisanData = [
     craft: "Woodwork",
     location: { city: "Mysuru", state: "Karnataka" },
     profileImage:
-      "https://www.originalbuddhas.com/blog/5-important-artisans-around-the-world?srsltid=AfmBOoqZ_v1ELsG4vEB4RcLwC7mbsWMNpPvlTVJI4eNtQMn6yHNwh-8C",
+      `/uploads/artisans/govind%20shetty.jpg`,
     coverImage:
-      "https://www.originalbuddhas.com/blog/5-important-artisans-around-the-world?srsltid=AfmBOoqZ_v1ELsG4vEB4RcLwC7mbsWMNpPvlTVJI4eNtQMn6yHNwh-8C",
+      `/uploads/artisans/govind%20shetty.jpg`,
     since: 1980,
     featured: true,
   },
   {
-    name: "Zainab Khatun",
+    name: "Virendra Singh",
     bio: "A Pashmina embroiderer from Srinagar whose needlework is called 'painting with thread'.",
     story:
-      "In Kashmir's long winters, Zainab Khatun's needles dance across the finest Pashmina wool, creating garden scenes so detailed they are indistinguishable from watercolour paintings. The art of Kashmiri Sozni embroidery, which Zainab has practiced for 35 years, requires a unique single-needle technique where both sides of the shawl are identical — so precise that the 'inside' is as beautiful as the 'outside'. Her shawls have been gifted to foreign dignitaries by the Indian government. Each shawl takes three to nine months to embroider and represents 2,000 to 8,000 hours of work.",
+      "In Kashmir's long winters, Virendra Singh's needles dance across the finest Pashmina wool, creating garden scenes so detailed they are indistinguishable from watercolour paintings. The art of Kashmiri Sozni embroidery, which Virendra has practiced for 35 years, requires a unique single-needle technique where both sides of the shawl are identical — so precise that the 'inside' is as beautiful as the 'outside'. His shawls have been gifted to foreign dignitaries by the Indian government. Each shawl takes three to nine months to embroider and represents 2,000 to 8,000 hours of work.",
     craft: "Textile",
     location: { city: "Srinagar", state: "Jammu & Kashmir" },
     profileImage:
-      "https://www.instagram.com/p/DXtORjukx3z/",
+      `/uploads/artisans/virendra%20singh.jpg`,
     coverImage:
-      "https://www.instagram.com/p/DXtORjukx3z/",
+      `/uploads/artisans/virendra%20singh.jpg`,
     since: 1989,
     featured: false,
   },
@@ -104,7 +104,7 @@ const productData = [
     price: 2400,
     category: "Pottery",
     images: [
-      "https://byhandfromtheheart.wordpress.com/2017/05/19/meet-the-maker-subramani-the-potters-shed-kodaikanal-stoneware-potter/",
+      `/uploads/products/terracota%20vase.jpg`,
     ],
     glbAsset: "/glb_assets/vase.glb",
     stock: 25,
@@ -118,7 +118,7 @@ const productData = [
     price: 1800,
     category: "Weaving",
     images: [
-      "https://images.unsplash.com/photo-1595163623728-98e354923f54?auto=format&fit=crop&q=80&w=800",
+      `/uploads/products/bamboo.jpg`,
     ],
     glbAsset: "",
     stock: 40,
@@ -132,7 +132,7 @@ const productData = [
     price: 3200,
     category: "Metalwork",
     images: [
-      "https://images.unsplash.com/photo-1615461971485-9e3d93b45502?auto=format&fit=crop&q=80&w=800",
+      `/uploads/products/brass%20oil%20lamp.webp`,
     ],
     glbAsset: "/glb_assets/owl_metal_sculpture.glb",
     stock: 15,
@@ -146,7 +146,7 @@ const productData = [
     price: 8500,
     category: "Textile",
     images: [
-      "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&q=80&w=800",
+      `/uploads/products/hand%20woven%20saree.jpg`,
     ],
     glbAsset: "",
     stock: 10,
@@ -160,7 +160,7 @@ const productData = [
     price: 12000,
     category: "Woodwork",
     images: [
-      "https://images.unsplash.com/photo-1610729790676-e8d9d44cf617?auto=format&fit=crop&q=80&w=800",
+      `/uploads/products/sandalwood%20carving.jpeg`,
     ],
     glbAsset: "/glb_assets/christus_rex_christ_the_king.glb",
     stock: 5,
@@ -174,12 +174,12 @@ const productData = [
     price: 15000,
     category: "Textile",
     images: [
-      "https://images.unsplash.com/photo-1576487248866-993d50849925?auto=format&fit=crop&q=80&w=800",
+      `/uploads/products/kashmiri%20shawl.jpg`,
     ],
     glbAsset: "",
     stock: 8,
     ratings: { average: 4.6, count: 14 },
-    artisanName: "Zainab Khatun",
+    artisanName: "Virendra Singh",
   },
 ];
 

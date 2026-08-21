@@ -17,6 +17,14 @@ router.get("/google/callback", ...authController.googleCallback);
 // Token refresh (uses cookie, no auth middleware needed)
 router.post("/refresh", authController.refresh);
 
+// Email verification
+router.get("/verify-email/:token", authController.verifyEmail);
+router.post("/resend-verification", authController.resendVerification);
+
+// Password reset
+router.post("/forgot-password", authController.forgotPassword);
+router.post("/reset-password", authController.resetPassword);
+
 // Protected
 router.post("/logout", authMiddleware as any, authController.logout);
 router.get("/me", authMiddleware as any, authController.me);

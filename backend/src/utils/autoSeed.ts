@@ -8,6 +8,7 @@
 import mongoose from "mongoose";
 import Product from "../models/Product.js";
 import Artisan from "../models/Artisan.js";
+import env from "../config/env.js";
 
 const artisanData = [
   {
@@ -18,9 +19,9 @@ const artisanData = [
     craft: "Pottery",
     location: { city: "Khurja", state: "Uttar Pradesh" },
     profileImage:
-      "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=600",
+      `/uploads/artisans/meera%20devi.jpg`,
     coverImage:
-      "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=1200",
+      `/uploads/artisans/meera%20devi.jpg`,
     since: 1992,
     featured: true,
   },
@@ -32,9 +33,9 @@ const artisanData = [
     craft: "Weaving",
     location: { city: "Sualkuchi", state: "Assam" },
     profileImage:
-      "http://static1.squarespace.com/static/63489422aabcb306701a168a/6390b45b5d47f813bcf96a27/63ebf7b47511a36479e7a465/1741717837188/Siju+Shamji+Vishram73.jpeg?format=1500w",
+      `/uploads/artisans/rajan%20mistry.jpg`,
     coverImage:
-      "http://static1.squarespace.com/static/63489422aabcb306701a168a/6390b45b5d47f813bcf96a27/63ebf7b47511a36479e7a465/1741717837188/Siju+Shamji+Vishram73.jpeg?format=1500w",
+      `/uploads/artisans/rajan%20mistry.jpg`,
     since: 1985,
     featured: true,
   },
@@ -46,9 +47,9 @@ const artisanData = [
     craft: "Metalwork",
     location: { city: "Bastar", state: "Chhattisgarh" },
     profileImage:
-      "https://production.ruralindiaonline.org/uploads/IMG_8039_8a30f08d42.jpg",
+      `/uploads/artisans/suresh%20vishwakarma.webp`,
     coverImage:
-      "https://production.ruralindiaonline.org/uploads/IMG_8039_8a30f08d42.jpg",
+      `/uploads/artisans/suresh%20vishwakarma.webp`,
     since: 1978,
     featured: true,
   },
@@ -60,9 +61,9 @@ const artisanData = [
     craft: "Textile",
     location: { city: "Sanganer", state: "Rajasthan" },
     profileImage:
-      "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=600",
+      `/uploads/artisans/fatima%20begum.jpg`,
     coverImage:
-      "https://images.unsplash.com/photo-1610030469983-98e74d98c9b6?auto=format&fit=crop&q=80&w=1200",
+      `/uploads/artisans/fatima%20begum.jpg`,
     since: 1995,
     featured: false,
   },
@@ -74,23 +75,23 @@ const artisanData = [
     craft: "Woodwork",
     location: { city: "Mysuru", state: "Karnataka" },
     profileImage:
-      "https://images.pexels.com/photos/37513688/pexels-photo-37513688.jpeg",
+      `/uploads/artisans/govind%20shetty.jpg`,
     coverImage:
-      "https://images.pexels.com/photos/37513688/pexels-photo-37513688.jpeg",
+      `/uploads/artisans/govind%20shetty.jpg`,
     since: 1980,
     featured: true,
   },
   {
-    name: "Zainab Khatun",
+    name: "Virendra Singh",
     bio: "A Pashmina embroiderer from Srinagar whose needlework is called 'painting with thread'.",
     story:
-      "In Kashmir's long winters, Zainab Khatun's needles dance across the finest Pashmina wool, creating garden scenes so detailed they are indistinguishable from watercolour paintings. The art of Kashmiri Sozni embroidery, which Zainab has practiced for 35 years, requires a unique single-needle technique where both sides of the shawl are identical — so precise that the 'inside' is as beautiful as the 'outside'. Her shawls have been gifted to foreign dignitaries by the Indian government. Each shawl takes three to nine months to embroider and represents 2,000 to 8,000 hours of work.",
+      "In Kashmir's long winters, Virendra Singh's needles dance across the finest Pashmina wool, creating garden scenes so detailed they are indistinguishable from watercolour paintings. The art of Kashmiri Sozni embroidery, which Virendra has practiced for 35 years, requires a unique single-needle technique where both sides of the shawl are identical — so precise that the 'inside' is as beautiful as the 'outside'. His shawls have been gifted to foreign dignitaries by the Indian government. Each shawl takes three to nine months to embroider and represents 2,000 to 8,000 hours of work.",
     craft: "Textile",
     location: { city: "Srinagar", state: "Jammu & Kashmir" },
     profileImage:
-      "http://soznikashmir.com/cdn/shop/files/fb_bg_a41718b5-b27e-487d-95d3-1f7cc77a7712.jpg?v=1631084742",
+      `/uploads/artisans/virendra%20singh.jpg`,
     coverImage:
-      "http://soznikashmir.com/cdn/shop/files/fb_bg_a41718b5-b27e-487d-95d3-1f7cc77a7712.jpg?v=1631084742",
+      `/uploads/artisans/virendra%20singh.jpg`,
     since: 1989,
     featured: false,
   },
@@ -104,7 +105,7 @@ const productData = [
     price: 2400,
     category: "Pottery",
     images: [
-      "https://exclusivelane.com/cdn/shop/files/download_0af9ca7f-e3d7-4b20-9741-06b694475426_1024x.jpg?v=1750356209",
+      `/uploads/products/terracota%20vase.jpg`,
     ],
     glbAsset: "/glb_assets/vase.glb",
     stock: 25,
@@ -118,7 +119,7 @@ const productData = [
     price: 1800,
     category: "Weaving",
     images: [
-      "https://forestpost.in/wp-content/uploads/2026/04/bamboo-basket-brown-and-orange-border-m-9x-3-768x768.jpg",
+      `/uploads/products/bamboo.jpg`,
     ],
     glbAsset: "",
     stock: 40,
@@ -132,7 +133,7 @@ const productData = [
     price: 3200,
     category: "Metalwork",
     images: [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo2RJSJfHz182oyRQYTzS2H72qQVm1nAa2KF4KoeyhYCTg8xLt4c3ICJ6I&s=10",
+      `/uploads/products/brass%20oil%20lamp.webp`,
     ],
     glbAsset: "/glb_assets/owl_metal_sculpture.glb",
     stock: 15,
@@ -146,7 +147,7 @@ const productData = [
     price: 8500,
     category: "Textile",
     images: [
-      "https://shobitam.in/cdn/shop/files/RDR523_8.jpg?v=1757264516&width=1800",
+      `/uploads/products/hand%20woven%20saree.jpg`,
     ],
     glbAsset: "",
     stock: 10,
@@ -160,7 +161,7 @@ const productData = [
     price: 12000,
     category: "Woodwork",
     images: [
-      "https://www.ragaarts.com/cdn/shop/articles/sandal-elephant-blog.jpg?crop=center&height=900&v=1724132793&width=2400",
+      `/uploads/products/sandalwood%20carving.jpeg`,
     ],
     glbAsset: "/glb_assets/christus_rex_christ_the_king.glb",
     stock: 5,
@@ -174,12 +175,12 @@ const productData = [
     price: 15000,
     category: "Textile",
     images: [
-      "https://www.shoppinginkashmir.com/cdn/shop/files/7_2_979fc186-4be3-4d0c-8b3a-bd9a6e58419a.png?v=1746084900&width=823",
+      `/uploads/products/kashmiri%20shawl.jpg`,
     ],
     glbAsset: "",
     stock: 8,
     ratings: { average: 4.6, count: 14 },
-    artisanName: "Zainab Khatun",
+    artisanName: "Virendra Singh",
   },
 ];
 
@@ -201,9 +202,9 @@ export const autoSeed = async (): Promise<void> => {
 
     console.log("🌱  Collections empty — auto-seeding artisans & products...");
 
-    // Clear any partial data
-    if (artisanCount === 0) await Product.deleteMany({});
-    if (productCount === 0) await Artisan.deleteMany({});
+    // Clear only if both are exactly 0 (or we just want to ensure clean state before seeding)
+    // Actually, if we are here, it means AT LEAST ONE is 0. 
+    // To be safe, wipe both to avoid orphaned records when seeding.
     await Product.deleteMany({});
     await Artisan.deleteMany({});
 

@@ -36,6 +36,12 @@ const env: EnvConfig = {
   frontendOrigin: process.env.FRONTEND_ORIGIN || "http://localhost:5173",
 
   geminiApiKey: process.env.GEMINI_API_KEY || "",
+
+  smtpHost: process.env.SMTP_HOST || "",
+  smtpPort: parseInt(process.env.SMTP_PORT || "587", 10),
+  smtpUser: process.env.SMTP_USER || "",
+  smtpPass: process.env.SMTP_PASS || "",
+  smtpFrom: process.env.SMTP_FROM || "KalaSetu <noreply@kalasetu.com>",
 };
 
 export default env;
